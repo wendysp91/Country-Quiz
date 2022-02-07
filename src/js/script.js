@@ -83,15 +83,15 @@ function question1() {
 function question2() {
     var n = 0;
     var answers = [];
-    var question = `The capital of ${countryArray[n].name.common} is:`
-    answers.push({ true: countryArray[n].capital[0] })
+    var question = `The languaje of ${countryArray[n].name.common} is:`
+    answers.push({ true: Object.values(countryArray[n].languages) })
 
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ false: countryArray[n + 1].capital[0] })
+            answers.push({ false: Object.values(countryArray[n + 1].languages) })
 
         } else {
-            answers.push({ false: countryArray[n - i].capital[0] })
+            answers.push({ false: Object.values(countryArray[n - i].languages) })
         }
         n++;
     }
@@ -103,14 +103,13 @@ function question3() {
     var n = 0;
     var answers = [];
     var question = `The capital of ${countryArray[n].name.common} is:`
-    answers.push({ true: countryArray[n].capital[0] })
-
+    answers.push({ true: Object.values(countryArray[n].currencies)[0].name })
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ false: countryArray[n + 1].capital[0] })
+            answers.push({ false: Object.values(countryArray[n + 1].currencies)[0].name })
 
         } else {
-            answers.push({ false: countryArray[n - i].capital[0] })
+            answers.push({ false: Object.values(countryArray[n - i].currencies)[0].name })
         }
         n++;
     }
@@ -120,18 +119,16 @@ function question3() {
 //Question 4
 function question4() {
     var n = 0;
+    var continents = ["America", "Europe", "Africa", "Asia", "Oceania"];
     var answers = [];
-    var question = `The capital of ${countryArray[n].name.common} is:`
-    answers.push({ true: countryArray[n].capital[0] })
+    var question = `What continent does ${countryArray[n].name.common} belong to:`
+    answers.push({ true: countryArray[n].continents[0] })
 
-    for (let i = n; i < 3; i++) {
-        if (n + 1 < countryArray.length) {
-            answers.push({ false: countryArray[n + 1].capital[0] })
-
-        } else {
-            answers.push({ false: countryArray[n - i].capital[0] })
+    for (let i = 0; i < 5; i++) {
+        if (Object.values(answers[0])[0] !== continents[i]) {
+            answers.push({ false: continents[i] })
         }
-        n++;
+        i++;
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
@@ -139,7 +136,8 @@ function question4() {
 
 async function calls() {
     await getCountry();
-    question1();
+
+    question3();
 }
 calls();
 
