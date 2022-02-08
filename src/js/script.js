@@ -53,9 +53,9 @@ function showQuestion(question, shuffled) {
 
     for (let i = 0; i < shuffled.length; i++) {
         var div = document.createElement('div');
-        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer");
+        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer", "hover:bg-violet", "hover:text-white");
         var p = document.createElement('p');
-        p.classList.add("text-violet", "text-2xl");
+        p.classList.add("text-violet", "text-2xl", "hover:text-white");
         p.innerText = Object.values(shuffled[i]);
         div.appendChild(p);
         answersElement.appendChild(div)
@@ -63,7 +63,23 @@ function showQuestion(question, shuffled) {
         questionElement.parentNode.insertBefore(answersElement, questionElement.nextSibling);
         // contain.appendChild(div);
     }
-    // questionElement.parentNode.replaceChild(div, questionElement.nextSibling)
+    var elements = document.querySelectorAll('#answers div');
+    elements.forEach((item) => {
+        item.addEventListener('click', function (e) {
+            item.classList.remove("hover:bg-violet");
+            item.classList.add("bg-red-500");
+            item.classList.add("text-white");
+
+        });
+    })
+
+    // for (let i = 0; i < answersElement.children.length; i++) {
+    //     answersElement.children[i].addEventListener('click', function (e) {
+    //         e.target.classList.add("bg-red-500");
+    //     })
+
+    // }
+
 }
 //Question 1
 function question1() {
@@ -139,6 +155,10 @@ function question4() {
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
 }
+
+/*function validateAnswer(div) {
+    div.classList.add("bg-red-500");
+}*/
 
 async function calls() {
     await getCountry();
