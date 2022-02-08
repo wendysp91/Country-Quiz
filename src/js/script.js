@@ -48,16 +48,22 @@ function shuffle(answers) {
 function showQuestion(question, shuffled) {
     var questionElement = document.getElementById('question');
     questionElement.innerText = question;
+    var answersElement = document.getElementById('answers');
+    answersElement.innerHTML = "";
+
     for (let i = 0; i < shuffled.length; i++) {
         var div = document.createElement('div');
-        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3");
+        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer");
         var p = document.createElement('p');
-        p.classList.add("text-violet", "text-2xl")
+        p.classList.add("text-violet", "text-2xl");
         p.innerText = Object.values(shuffled[i]);
         div.appendChild(p);
-        var contain = document.getElementById('contain');
-        contain.appendChild(div);
+        answersElement.appendChild(div)
+        //var contain = document.getElementById('contain');
+        questionElement.parentNode.insertBefore(answersElement, questionElement.nextSibling);
+        // contain.appendChild(div);
     }
+    // questionElement.parentNode.replaceChild(div, questionElement.nextSibling)
 }
 //Question 1
 function question1() {
@@ -102,7 +108,7 @@ function question2() {
 function question3() {
     var n = 0;
     var answers = [];
-    var question = `The capital of ${countryArray[n].name.common} is:`
+    var question = `The currency of ${countryArray[n].name.common} is:`
     answers.push({ true: Object.values(countryArray[n].currencies)[0].name })
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
@@ -136,8 +142,13 @@ function question4() {
 
 async function calls() {
     await getCountry();
-
-    question3();
+    var next = document.getElementById('next');
+    var numero = 2;
+    next.addEventListener('click', function () {
+        window["question" + numero]()
+        numero++
+    })
+    question1();
 }
 calls();
 
