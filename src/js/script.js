@@ -8,11 +8,13 @@ async function getCountry() {
         console.log(error)
     }
 }
+
 function getData() {
     return fetch('https://restcountries.com/v3.1/all')
         .then(response => response.json())
         .then(json => json);
 }
+
 var countryArray = [];
 function createArray(countries) {
     for (let i = 0; i < 10; i++) {
@@ -45,13 +47,18 @@ function shuffle(answers) {
     }
     return answers;
 }
+
 function showQuestion(question, shuffled) {
     var questionElement = document.getElementById('question');
     questionElement.innerText = question;
     var answersElement = document.getElementById('answers');
     answersElement.innerHTML = "";
-
+    var trueAnswer = "";
     for (let i = 0; i < shuffled.length; i++) {
+        if (Object.keys(shuffled[i])[0] === 'correct') {
+            trueAnswer = Object.values(shuffled[i])[0];
+        }
+
         var div = document.createElement('div');
         div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer", "hover:bg-violet", "hover:text-white");
         var p = document.createElement('p');
@@ -63,37 +70,46 @@ function showQuestion(question, shuffled) {
         questionElement.parentNode.insertBefore(answersElement, questionElement.nextSibling);
         // contain.appendChild(div);
     }
-    var elements = document.querySelectorAll('#answers div');
+    var elements = [...document.querySelectorAll('#answers div')];
     elements.forEach((item) => {
         item.addEventListener('click', function (e) {
-            item.classList.remove("hover:bg-violet");
-            item.classList.add("bg-red-500");
-            item.classList.add("text-white");
+            console.log(elements)
+            elements.map(x => x.classList.remove('bg-red-500', 'bg-green-500', 'border-red-500', 'border-green-500'));
+            elements.map(x => x.classList.add('hover:bg-violet'));
 
+            console.log(item)
+            console.log(e.target)
+            if (e.target.innerText === trueAnswer) {
+                item.classList.add("bg-green-500");
+                item.classList.add("border-green-500");
+                item.classList.add("text-white");
+                item.classList.remove('hover:bg-violet');
+            } else {
+                item.classList.add("bg-red-500");
+                item.classList.add("border-red-500");
+                item.classList.remove('hover:bg-violet');
+
+            }
         });
-    })
+    });
+}
 
-    // for (let i = 0; i < answersElement.children.length; i++) {
-    //     answersElement.children[i].addEventListener('click', function (e) {
-    //         e.target.classList.add("bg-red-500");
-    //     })
-
-    // }
-
+function cleanItems() {
+    elements.map(x => x.classList.remove('bg-red-500'));
 }
 //Question 1
 function question1() {
     var n = 0;
     var answers = [];
     var question = `The capital of ${countryArray[n].name.common} is:`
-    answers.push({ true: countryArray[n].capital[0] })
+    answers.push({ correct: countryArray[n].capital[0] })
 
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ false: countryArray[n + 1].capital[0] })
+            answers.push({ incorrect: countryArray[n + 1].capital[0] })
 
         } else {
-            answers.push({ false: countryArray[n - i].capital[0] })
+            answers.push({ incorrect: countryArray[n - i].capital[0] })
         }
         n++;
     }
@@ -106,59 +122,57 @@ function question2() {
     var n = 0;
     var answers = [];
     var question = `The languaje of ${countryArray[n].name.common} is:`
-    answers.push({ true: Object.values(countryArray[n].languages) })
+    answers.push({ corect: Object.values(countryArray[n].languages) })
 
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ false: Object.values(countryArray[n + 1].languages) })
+            answers.push({ incorrect: Object.values(countryArray[n + 1].languages) })
 
         } else {
-            answers.push({ false: Object.values(countryArray[n - i].languages) })
+            answers.push({ incorrect: Object.values(countryArray[n - i].languages) })
         }
         n++;
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
 }
+
 //Question 3
 function question3() {
     var n = 0;
     var answers = [];
     var question = `The currency of ${countryArray[n].name.common} is:`
-    answers.push({ true: Object.values(countryArray[n].currencies)[0].name })
+    answers.push({ correct: Object.values(countryArray[n].currencies)[0].name })
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ false: Object.values(countryArray[n + 1].currencies)[0].name })
+            answers.push({ incorrect: Object.values(countryArray[n + 1].currencies)[0].name })
 
         } else {
-            answers.push({ false: Object.values(countryArray[n - i].currencies)[0].name })
+            answers.push({ incorrect: Object.values(countryArray[n - i].currencies)[0].name })
         }
         n++;
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
 }
+
 //Question 4
 function question4() {
     var n = 0;
     var continents = ["America", "Europe", "Africa", "Asia", "Oceania"];
     var answers = [];
     var question = `What continent does ${countryArray[n].name.common} belong to:`
-    answers.push({ true: countryArray[n].continents[0] })
+    answers.push({ correct: countryArray[n].continents[0] })
 
     for (let i = 0; i < 5; i++) {
         if (Object.values(answers[0])[0] !== continents[i]) {
-            answers.push({ false: continents[i] })
+            answers.push({ incorrect: continents[i] })
         }
         i++;
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
 }
-
-/*function validateAnswer(div) {
-    div.classList.add("bg-red-500");
-}*/
 
 async function calls() {
     await getCountry();
@@ -171,4 +185,3 @@ async function calls() {
     question1();
 }
 calls();
-
