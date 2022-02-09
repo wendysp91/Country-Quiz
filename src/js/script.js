@@ -60,11 +60,11 @@ function showQuestion(question, shuffled) {
         }
 
         var div = document.createElement('div');
-        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer", "hover:bg-violet", "hover:text-white");
-        var p = document.createElement('p');
-        p.classList.add("text-violet", "text-2xl", "hover:text-white");
-        p.innerText = Object.values(shuffled[i]);
-        div.appendChild(p);
+        div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer", "hover:bg-violet", "text-violet", "text-2xl", "hover:text-white");
+        // var p = document.createElement('p');
+        //p.classList.add("text-violet", "text-2xl", "hover:text-white");
+        //p.innerText = Object.values(shuffled[i]);
+        div.innerText = Object.values(shuffled[i]);
         answersElement.appendChild(div)
         //var contain = document.getElementById('contain');
         questionElement.parentNode.insertBefore(answersElement, questionElement.nextSibling);
@@ -74,28 +74,25 @@ function showQuestion(question, shuffled) {
     elements.forEach((item) => {
         item.addEventListener('click', function (e) {
             console.log(elements)
-            elements.map(x => x.classList.remove('bg-red-500', 'bg-green-500', 'border-red-500', 'border-green-500'));
-            elements.map(x => x.classList.add('hover:bg-violet'));
+            elements.map(x => x.classList.remove('bg-red-500', 'bg-green-500', 'border-red-500', 'border-green-500', 'text-white', "selected"));
+            elements.map(x => x.classList.add('hover:bg-violet', 'text-violet'));
 
             console.log(item)
             console.log(e.target)
             if (e.target.innerText === trueAnswer) {
-                item.classList.add("bg-green-500");
-                item.classList.add("border-green-500");
-                item.classList.add("text-white");
-                item.classList.remove('hover:bg-violet');
+                item.classList.add("bg-green-500", "border-green-500", "text-white", "selected");
+                item.classList.remove('hover:bg-violet', 'text-violet');
             } else {
-                item.classList.add("bg-red-500");
-                item.classList.add("border-red-500");
-                item.classList.remove('hover:bg-violet');
-
+                item.classList.add("bg-red-500", "border-red-500", "text-white", "selected");
+                item.classList.remove('hover:bg-violet', 'text-violet');
             }
         });
     });
 }
 
-function cleanItems() {
-    elements.map(x => x.classList.remove('bg-red-500'));
+function getSelectedAnswer() {
+    test.classList.contains(testClass);
+
 }
 //Question 1
 function question1() {
@@ -178,9 +175,12 @@ async function calls() {
     await getCountry();
     var next = document.getElementById('next');
     var numero = 2;
+    item.classList.contains('selected');
+
     next.addEventListener('click', function () {
         window["question" + numero]()
         numero++
+
     })
     question1();
 }
