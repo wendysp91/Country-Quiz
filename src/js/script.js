@@ -61,24 +61,17 @@ function showQuestion(question, shuffled) {
 
         var div = document.createElement('div');
         div.classList.add("mb-7", "rounded-2xl", "border-solid", "border-violet", "border-2", "p-3", "cursor-pointer", "hover:bg-violet", "text-violet", "text-2xl", "hover:text-white");
-        // var p = document.createElement('p');
-        //p.classList.add("text-violet", "text-2xl", "hover:text-white");
-        //p.innerText = Object.values(shuffled[i]);
+
         div.innerText = Object.values(shuffled[i]);
         answersElement.appendChild(div)
-        //var contain = document.getElementById('contain');
         questionElement.parentNode.insertBefore(answersElement, questionElement.nextSibling);
-        // contain.appendChild(div);
     }
     var elements = [...document.querySelectorAll('#answers div')];
     elements.forEach((item) => {
         item.addEventListener('click', function (e) {
-            console.log(elements)
             elements.map(x => x.classList.remove('bg-red-500', 'bg-green-500', 'border-red-500', 'border-green-500', 'text-white', "selected"));
             elements.map(x => x.classList.add('hover:bg-violet', 'text-violet'));
 
-            console.log(item)
-            console.log(e.target)
             if (e.target.innerText === trueAnswer) {
                 item.classList.add("bg-green-500", "border-green-500", "text-white", "selected");
                 item.classList.remove('hover:bg-violet', 'text-violet');
@@ -90,17 +83,24 @@ function showQuestion(question, shuffled) {
     });
 }
 
-function getSelectedAnswer() {
-    test.classList.contains(testClass);
-
+function showResult(count) {
+    var questionElement = document.getElementById('question');
+    questionElement.innerText = 'Results';
+    var answersElement = document.getElementById('answers');
+    answersElement.innerHTML = `You got ${count} correct answers`;
+    var tryAgain = document.getElementById('next');
+    tryAgain.innerText = 'Try again';
+    tryAgain.addEventListener('click', function (e) {
+        calls();
+    })
 }
+
 //Question 1
 function question1() {
     var n = 0;
     var answers = [];
     var question = `The capital of ${countryArray[n].name.common} is:`
     answers.push({ correct: countryArray[n].capital[0] })
-
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
             answers.push({ incorrect: countryArray[n + 1].capital[0] })
@@ -112,6 +112,7 @@ function question1() {
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
+    return shuffled;
 }
 
 //Question 2
@@ -119,19 +120,19 @@ function question2() {
     var n = 0;
     var answers = [];
     var question = `The languaje of ${countryArray[n].name.common} is:`
-    answers.push({ corect: Object.values(countryArray[n].languages) })
-
+    answers.push({ correct: Object.values(countryArray[n].languages)[0] })
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
-            answers.push({ incorrect: Object.values(countryArray[n + 1].languages) })
+            answers.push({ incorrect: Object.values(countryArray[n + 1].languages)[0] })
 
         } else {
-            answers.push({ incorrect: Object.values(countryArray[n - i].languages) })
+            answers.push({ incorrect: Object.values(countryArray[n - i].languages)[0] })
         }
         n++;
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
+    return shuffled;
 }
 
 //Question 3
@@ -151,6 +152,7 @@ function question3() {
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
+    return shuffled;
 }
 
 //Question 4
@@ -169,19 +171,31 @@ function question4() {
     }
     var shuffled = shuffle(answers);
     showQuestion(question, shuffled);
+    return shuffled;
 }
 
 async function calls() {
     await getCountry();
     var next = document.getElementById('next');
     var numero = 2;
-    item.classList.contains('selected');
+    var correctCount = 0;
 
     next.addEventListener('click', function () {
-        window["question" + numero]()
-        numero++
+        var selected = document.querySelectorAll('.selected');
 
+        for (let i = 0; i < questionArray.length; i++) {
+            if (Object.keys(questionArray[i])[0] === 'correct' && selected[0].innerText === Object.values(questionArray[i])[0]) {
+                correctCount++;
+            }
+        }
+        console.log(correctCount)
+        if (window["question" + numero] !== undefined) {
+            questionArray = window["question" + numero]();
+            numero++
+        } else {
+            showResult(correctCount);
+        }
     })
-    question1();
+    questionArray = question1();
 }
 calls();
