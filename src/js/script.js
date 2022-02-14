@@ -88,9 +88,17 @@ function showResult(count) {
     questionElement.innerText = 'Results';
     var answersElement = document.getElementById('answers');
     answersElement.innerHTML = `You got ${count} correct answers`;
-    var tryAgain = document.getElementById('next');
+    var contain = document.getElementById('contain');
+    var next = document.getElementById('next');
+    var tryAgain = document.createElement('button');
+    tryAgain.setAttribute('id', 'tryAgain');
+    tryAgain.classList.add("text-white", "bg-violet", "hover:bg-violet-800", "focus:ring-4", "focus:ring-violet-300", "text-xl", "rounded-lg", "px-5", "py-2.5", "text-center", "mb-2", "float-right")
     tryAgain.innerText = 'Try again';
+    contain.removeChild(next);
+    contain.appendChild(tryAgain);
     tryAgain.addEventListener('click', function (e) {
+        contain.removeChild(tryAgain);
+        countryArray = [];
         calls();
     })
 }
@@ -124,7 +132,6 @@ function question2() {
     for (let i = n; i < 3; i++) {
         if (n + 1 < countryArray.length) {
             answers.push({ incorrect: Object.values(countryArray[n + 1].languages)[0] })
-
         } else {
             answers.push({ incorrect: Object.values(countryArray[n - i].languages)[0] })
         }
@@ -174,26 +181,47 @@ function question4() {
     return shuffled;
 }
 
+/*function recharge() {
+    window.numero = 2;
+    window.correctCount = 0;
+    window.questionArray = question1();
+    var contain = document.getElementById('contain');
+    var tryAgain = document.getElementById('tryAgain');
+    var next = document.createElement('button');
+    next.setAttribute('id', 'next');
+    next.classList.add("text-white", "bg-violet", "hover:bg-violet-800", "focus:ring-4", "focus:ring-violet-300", "text-xl", "rounded-lg", "px-5", "py-2.5", "text-center", "mb-2", "float-right")
+    next.innerText = 'Next';
+    contain.removeChild(tryAgain);
+    contain.appendChild(next);
+}*/
+
 async function calls() {
     await getCountry();
-    var next = document.getElementById('next');
-    var numero = 2;
-    var correctCount = 0;
+    window.numero = 2;
+    window.correctCount = 0;
+    var contain = document.getElementById('contain');
+    var next = document.createElement('button');
+    next.setAttribute('id', 'next');
+    next.classList.add("text-white", "bg-violet", "hover:bg-violet-800", "focus:ring-4", "focus:ring-violet-300", "text-xl", "rounded-lg", "px-5", "py-2.5", "text-center", "mb-2", "float-right")
+    next.innerText = 'Next';
+    contain.appendChild(next);
 
     next.addEventListener('click', function () {
         var selected = document.querySelectorAll('.selected');
-
-        for (let i = 0; i < questionArray.length; i++) {
-            if (Object.keys(questionArray[i])[0] === 'correct' && selected[0].innerText === Object.values(questionArray[i])[0]) {
-                correctCount++;
-            }
-        }
-        console.log(correctCount)
-        if (window["question" + numero] !== undefined) {
-            questionArray = window["question" + numero]();
-            numero++
+        if (selected.length === 0) {
+            alert("You must select an answer");
         } else {
-            showResult(correctCount);
+            for (let i = 0; i < questionArray.length; i++) {
+                if (Object.keys(questionArray[i])[0] === 'correct' && selected[0].innerText === Object.values(questionArray[i])[0]) {
+                    correctCount++;
+                }
+            }
+            if (window["question" + numero] !== undefined) {
+                questionArray = window["question" + numero]();
+                numero++
+            } else {
+                showResult(correctCount);
+            }
         }
     })
     questionArray = question1();
